@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-cream text-charcoal font-lato;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-playfair;
+  }
+}
+
+@layer components {
+  .section-divider {
+    @apply flex items-center gap-4 my-8;
+  }
+  .section-divider::before,
+  .section-divider::after {
+    @apply flex-1 h-px bg-purple-200 content-[''];
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-6 py-3 bg-purple-800 text-white font-lato font-semibold text-sm tracking-wide uppercase rounded-sm hover:bg-purple-700 transition-colors shadow;
+  }
+
+  .btn-gold {
+    @apply inline-flex items-center gap-2 px-6 py-3 bg-gold-600 text-white font-lato font-semibold text-sm tracking-wide uppercase rounded-sm hover:bg-gold-700 transition-colors shadow;
+  }
+
+  .page-title {
+    @apply font-playfair text-4xl font-bold text-purple-900 mb-2;
+  }
+
+  .review-body h2 {
+    @apply font-playfair text-2xl font-bold text-purple-900 mt-8 mb-3;
+  }
+
+  .review-body h3 {
+    @apply font-playfair text-xl font-semibold text-purple-800 mt-6 mb-2;
+  }
+
+  .review-body p {
+    @apply leading-relaxed mb-4;
+  }
+
+  .review-body blockquote {
+    @apply border-l-4 border-gold-500 pl-4 italic text-gray-600 my-4;
+  }
+}
