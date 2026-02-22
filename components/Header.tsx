@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/reviews", label: "Reviews" },
+  { href: "/show", label: "The Show" },
   { href: "/about", label: "About" },
 ];
 
@@ -44,6 +45,32 @@ export default function Header() {
 
   return (
     <header className="bg-purple-900 border-b-4 border-gold-600 shadow-lg">
+      {/* ── Broadcast Banner ──────────────────────────────────────── */}
+      <div className="bg-amber-400 py-2 px-4">
+        <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-center">
+          {/* TV icon + ON AIR */}
+          <span className="flex items-center gap-1.5 font-lato font-black text-purple-950 text-xs uppercase tracking-widest shrink-0">
+            <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+              <path d="M21 6h-3.17L19 4.83 17.83 3.66 15.17 6.33 12.5 3.66 9.83 6.33 7.17 3.66 6 4.83 7.17 6H3C1.9 6 1 6.9 1 8v12c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 14H3V8h18v12z"/>
+            </svg>
+            Watch Us Live
+          </span>
+          <span className="flex items-center gap-1.5 shrink-0">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-600 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
+            </span>
+            <span className="font-lato font-bold text-purple-950 text-sm">
+              Every Other Saturday&nbsp;&nbsp;1:30–2:00 PM&nbsp;<span className="font-black">EST</span>
+            </span>
+          </span>
+          <span className="hidden sm:block h-4 w-px bg-amber-600"></span>
+          <span className="font-lato text-purple-900 text-xs sm:text-sm font-semibold tracking-wide">
+            <strong>Spectrum</strong> Ch.&nbsp;56&nbsp;&nbsp;·&nbsp;&nbsp;<strong>RCN</strong> Ch.&nbsp;83&nbsp;&nbsp;·&nbsp;&nbsp;<strong>Fios</strong> Ch.&nbsp;3
+          </span>
+        </div>
+      </div>
+
       {/* Top strip with social icons */}
       <div className="bg-purple-950 py-1.5">
         <div className="max-w-6xl mx-auto px-4 flex justify-end gap-3">
