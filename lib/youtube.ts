@@ -14,45 +14,53 @@ export async function getChannelVideos(): Promise<YouTubeVideo[]> {
     return SAMPLE_VIDEOS;
   }
 
-  // Step 1: Get the uploads playlist ID for the channel
-  const channelRes = await fetch(
-    `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${channelId}&key=${apiKey}`
-  );
-  if (!channelRes.ok) return SAMPLE_VIDEOS;
+  // Derive the uploads playlist ID from the channel ID (UC... → UU...)
+  const uploadsPlaylistId = "UU" + channelId.slice(2);
 
-  const channelData = await channelRes.json();
-  const uploadsPlaylistId =
-    channelData.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
-  if (!uploadsPlaylistId) return SAMPLE_VIDEOS;
+  // Step 2: Get all videos from the uploads playlist (paginate through all pages)
+  type PlaylistItem = {
+    snippet: {
+      resourceId: { videoId: string };
+      title: string;
+      description: string;
+      publishedAt: string;
+      thumbnails?: { high?: { url: string }; default?: { url: string } };
+    };
+  };
 
-  // Step 2: Get videos from the uploads playlist
-  const playlistRes = await fetch(
-    `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${uploadsPlaylistId}&maxResults=50&key=${apiKey}`
-  );
-  if (!playlistRes.ok) return SAMPLE_VIDEOS;
+  const allItems: YouTubeVideo[] = [];
+  let pageToken: string | undefined;
 
-  const playlistData = await playlistRes.json();
-  const items: YouTubeVideo[] = (playlistData.items ?? []).map(
-    (item: {
-      snippet: {
-        resourceId: { videoId: string };
-        title: string;
-        description: string;
-        publishedAt: string;
-        thumbnails?: { high?: { url: string }; default?: { url: string } };
-      };
-    }) => ({
-      id: item.snippet.resourceId.videoId,
-      title: item.snippet.title,
-      description: item.snippet.description,
-      publishedAt: item.snippet.publishedAt,
-      thumbnail:
-        item.snippet.thumbnails?.high?.url ??
-        `https://img.youtube.com/vi/${item.snippet.resourceId.videoId}/hqdefault.jpg`,
-    })
-  );
+  do {
+    const url = new URL("https://www.googleapis.com/youtube/v3/playlistItems");
+    url.searchParams.set("part", "snippet");
+    url.searchParams.set("playlistId", uploadsPlaylistId);
+    url.searchParams.set("maxResults", "50");
+    url.searchParams.set("key", apiKey);
+    if (pageToken) url.searchParams.set("pageToken", pageToken);
 
-  return items.length > 0 ? items : SAMPLE_VIDEOS;
+    const playlistRes = await fetch(url.toString(), { next: { revalidate: 3600 } });
+    if (!playlistRes.ok) break;
+
+    const playlistData = await playlistRes.json();
+
+    const pageItems: YouTubeVideo[] = (playlistData.items ?? []).map(
+      (item: PlaylistItem) => ({
+        id: item.snippet.resourceId.videoId,
+        title: item.snippet.title,
+        description: item.snippet.description,
+        publishedAt: item.snippet.publishedAt,
+        thumbnail:
+          item.snippet.thumbnails?.high?.url ??
+          `https://img.youtube.com/vi/${item.snippet.resourceId.videoId}/hqdefault.jpg`,
+      })
+    );
+
+    allItems.push(...pageItems);
+    pageToken = playlistData.nextPageToken;
+  } while (pageToken);
+
+  return allItems.length > 0 ? allItems : SAMPLE_VIDEOS;
 }
 
 // ─── Sample data (shown when YouTube API isn't configured yet) ────────────────

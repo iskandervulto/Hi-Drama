@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import { YouTubeVideo } from "@/lib/youtube";
 
@@ -14,15 +17,20 @@ function formatDate(iso: string) {
 }
 
 export default function VideoCard({ video }: VideoCardProps) {
+  const [expanded, setExpanded] = useState(false);
+
+  // Descriptions longer than ~120 chars get a toggle
+  const isLong = video.description && video.description.length > 120;
+
   return (
-    <a
-      href={`https://www.youtube.com/watch?v=${video.id}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group block bg-white rounded-sm overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 border border-purple-100"
-    >
-      {/* Thumbnail */}
-      <div className="relative aspect-video overflow-hidden bg-purple-100">
+    <div className="group bg-white rounded-sm overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 border border-purple-100 flex flex-col">
+      {/* Thumbnail — links to YouTube */}
+      <a
+        href={`https://www.youtube.com/watch?v=${video.id}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block relative aspect-video overflow-hidden bg-purple-100"
+      >
         <Image
           src={video.thumbnail}
           alt={video.title}
@@ -39,22 +47,44 @@ export default function VideoCard({ video }: VideoCardProps) {
             </svg>
           </div>
         </div>
-      </div>
+      </a>
 
       {/* Info */}
-      <div className="p-4 border-t-2 border-gold-500">
-        <h3 className="font-playfair text-base text-charcoal font-semibold leading-snug group-hover:text-purple-800 transition-colors line-clamp-2">
-          {video.title}
-        </h3>
+      <div className="p-4 border-t-2 border-gold-500 flex flex-col flex-1">
+        <a
+          href={`https://www.youtube.com/watch?v=${video.id}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h3 className="font-playfair text-base text-charcoal font-semibold leading-snug group-hover:text-purple-800 transition-colors line-clamp-2">
+            {video.title}
+          </h3>
+        </a>
+
         {video.description && (
-          <p className="text-xs text-gray-500 font-lato mt-2 line-clamp-2 leading-relaxed">
-            {video.description}
-          </p>
+          <div className="mt-2">
+            <p
+              className={`text-xs text-gray-500 font-lato leading-relaxed whitespace-pre-line ${
+                expanded ? "" : "line-clamp-2"
+              }`}
+            >
+              {video.description}
+            </p>
+            {isLong && (
+              <button
+                onClick={() => setExpanded((e) => !e)}
+                className="text-xs text-purple-600 hover:text-gold-600 font-lato font-semibold mt-1 transition-colors"
+              >
+                {expanded ? "Show less" : "Read more"}
+              </button>
+            )}
+          </div>
         )}
-        <p className="text-xs text-purple-400 font-lato mt-2 uppercase tracking-widest">
+
+        <p className="text-xs text-purple-400 font-lato mt-auto pt-2 uppercase tracking-widest">
           {formatDate(video.publishedAt)}
         </p>
       </div>
-    </a>
+    </div>
   );
 }

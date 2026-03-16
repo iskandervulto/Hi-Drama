@@ -11,7 +11,7 @@ const SOCIAL_LINKS = [
   {
     name: "YouTube",
     description: "Watch every episode on the Hi! Drama YouTube channel.",
-    href: "https://youtube.com/@hidrama",
+    href: "https://www.youtube.com/@evaheinemann7651/videos",
     color: "bg-red-600",
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
@@ -22,7 +22,7 @@ const SOCIAL_LINKS = [
   {
     name: "Facebook",
     description: "Join the conversation and see behind-the-scenes posts.",
-    href: "https://facebook.com/hidrama",
+    href: "https://www.facebook.com/hidramas",
     color: "bg-blue-700",
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">

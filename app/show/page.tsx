@@ -1,5 +1,5 @@
 import { getChannelVideos } from "@/lib/youtube";
-import VideoCard from "@/components/VideoCard";
+import VideoGrid from "@/components/VideoGrid";
 
 export const revalidate = 3600; // ISR — refresh channel videos every hour
 
@@ -35,27 +35,7 @@ export default async function ShowPage() {
 
       {/* Video grid */}
       <section className="max-w-6xl mx-auto px-4 py-12">
-        {videos.length === 0 ? (
-          <div className="text-center py-24">
-            <p className="font-playfair text-2xl text-purple-800 mb-2">
-              No episodes yet
-            </p>
-            <p className="text-gray-500 font-lato">
-              Check back soon — new episodes air every other Saturday.
-            </p>
-          </div>
-        ) : (
-          <>
-            <p className="font-lato text-sm text-purple-500 uppercase tracking-widest mb-6">
-              {videos.length} Episode{videos.length !== 1 ? "s" : ""}
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {videos.map((video) => (
-                <VideoCard key={video.id} video={video} />
-              ))}
-            </div>
-          </>
-        )}
+        <VideoGrid videos={videos} />
       </section>
     </main>
   );

@@ -61,7 +61,7 @@ export default function Footer() {
           <ul className="space-y-2 text-sm font-lato">
             <li>
               <a
-                href="https://youtube.com/@hidrama"
+                href="https://www.youtube.com/@evaheinemann7651/videos"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-white transition-colors"
@@ -71,7 +71,7 @@ export default function Footer() {
             </li>
             <li>
               <a
-                href="https://facebook.com/hidrama"
+                href="https://www.facebook.com/hidramas"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-white transition-colors"
