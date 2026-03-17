@@ -61,13 +61,18 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
       {/* Header */}
       <header className="mb-8">
         <p className="text-gold-600 font-lato text-xs tracking-widest uppercase mb-2">
-          {review.theaterName}
+          {review.productionCompany ? `${review.productionCompany} — ${review.theaterName}` : review.theaterName}
         </p>
-        <h1 className="font-playfair text-4xl sm:text-5xl font-bold text-purple-900 leading-tight mb-3">
+        <h1 className="font-playfair text-4xl sm:text-5xl font-bold text-purple-900 leading-tight mb-1">
           {review.showName}
         </h1>
+        {review.playwright && (
+          <p className="font-lato text-sm text-purple-500 italic mb-3">
+            by {review.playwright}
+          </p>
+        )}
         <p className="text-gray-400 font-lato text-sm">
-          Reviewed on {formatDate(review.date)}
+          Reviewed{review.reviewers && review.reviewers.length > 0 ? ` by ${review.reviewers.map(r => r.name).join(" & ")}` : ""} on {formatDate(review.date)}
         </p>
 
         {/* Decorative rule */}
@@ -78,10 +83,32 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
         </div>
       </header>
 
-      {/* YouTube embed */}
-      <section className="mb-8">
-        <YouTubeEmbed url={review.youtubeUrl} title={review.title} />
-      </section>
+      {/* Playbill image + Written review side by side */}
+      {(review.playbillImage || (review.reviewBody && Array.isArray(review.reviewBody) && review.reviewBody.length > 0)) && (
+        <section className="mb-8">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="h-px flex-1 bg-purple-100" />
+            <p className="font-playfair text-purple-400 text-sm italic">
+              The Review
+            </p>
+            <div className="h-px flex-1 bg-purple-100" />
+          </div>
+          <div>
+            {review.playbillImage && (
+              <img
+                src={review.playbillImage}
+                alt={`${review.showName} playbill`}
+                className="float-left w-48 mr-6 mb-4 rounded-sm shadow-md"
+              />
+            )}
+            {review.reviewBody && Array.isArray(review.reviewBody) && review.reviewBody.length > 0 && (
+              <div className="review-body prose prose-lg max-w-none font-lato text-charcoal text-justify">
+                <PortableText value={review.reviewBody as Parameters<typeof PortableText>[0]["value"]} />
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Playbill + Facebook CTAs */}
       {(review.playbillUrl || review.facebookUrl) && (
@@ -99,39 +126,26 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
               View Playbill
             </a>
           )}
+          {review.facebookUrl && (
+            <a
+              href={review.facebookUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-gold"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+              </svg>
+              See the Facebook Post
+            </a>
+          )}
         </div>
       )}
 
-      {/* Facebook CTA */}
-      {review.facebookUrl && (
-        <div className="mb-8 flex justify-center">
-          <a
-            href={review.facebookUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-gold"
-          >
-            <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-            </svg>
-            See the Facebook Post
-          </a>
-        </div>
-      )}
-
-      {/* Written review */}
-      {review.reviewBody && Array.isArray(review.reviewBody) && review.reviewBody.length > 0 && (
-        <section>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="h-px flex-1 bg-purple-100" />
-            <p className="font-playfair text-purple-400 text-sm italic">
-              The Review
-            </p>
-            <div className="h-px flex-1 bg-purple-100" />
-          </div>
-          <div className="review-body prose prose-lg max-w-none font-lato text-charcoal">
-            <PortableText value={review.reviewBody as Parameters<typeof PortableText>[0]["value"]} />
-          </div>
+      {/* YouTube embed */}
+      {review.youtubeUrl && (
+        <section className="mb-8">
+          <YouTubeEmbed url={review.youtubeUrl} title={review.title} />
         </section>
       )}
 

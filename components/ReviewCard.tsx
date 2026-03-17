@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Review, getYouTubeThumbnail, urlFor } from "@/lib/sanity";
+import { Review, getYouTubeThumbnail } from "@/lib/sanity";
 
 interface ReviewCardProps {
   review: Review;
@@ -16,10 +16,11 @@ function formatDate(dateStr: string) {
 
 export default function ReviewCard({ review }: ReviewCardProps) {
   const hasPlaybill = !!review.playbillImage;
-  const playbillSrc = hasPlaybill
-    ? urlFor(review.playbillImage!).width(600).url()
-    : null;
-  const thumbnail = playbillSrc ?? getYouTubeThumbnail(review.youtubeUrl);
+  const thumbnail = hasPlaybill
+    ? review.playbillImage!
+    : review.youtubeUrl
+      ? getYouTubeThumbnail(review.youtubeUrl)
+      : null;
 
   return (
     <Link
@@ -34,7 +35,7 @@ export default function ReviewCard({ review }: ReviewCardProps) {
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-500"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          unoptimized={!hasPlaybill}
+          unoptimized
         />
         {/* Play overlay — only shown when falling back to YouTube thumbnail */}
         {!hasPlaybill && (
@@ -55,7 +56,7 @@ export default function ReviewCard({ review }: ReviewCardProps) {
       {/* Info */}
       <div className="p-4 border-t-2 border-gold-500">
         <p className="text-xs text-purple-500 font-lato uppercase tracking-widest mb-1">
-          {review.theaterName}
+          {review.productionCompany ? `${review.productionCompany} — ${review.theaterName}` : review.theaterName}
         </p>
         <h3 className="font-playfair text-lg text-charcoal font-semibold leading-snug group-hover:text-purple-800 transition-colors">
           {review.showName}

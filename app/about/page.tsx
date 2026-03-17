@@ -33,7 +33,7 @@ const SOCIAL_LINKS = [
   {
     name: "Twitter / X",
     description: "Quick takes, show announcements, and theater news.",
-    href: "https://twitter.com/hidrama",
+    href: "https://x.com/6_Second_Review",
     color: "bg-gray-900",
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">

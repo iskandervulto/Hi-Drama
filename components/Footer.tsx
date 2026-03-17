@@ -81,7 +81,7 @@ export default function Footer() {
             </li>
             <li>
               <a
-                href="https://twitter.com/hidrama"
+                href="https://x.com/6_Second_Review"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-white transition-colors"

@@ -26,10 +26,13 @@ export interface Review {
   date: string;
   showName: string;
   theaterName: string;
-  youtubeUrl: string;
+  productionCompany?: string;
+  youtubeUrl?: string;
   facebookUrl?: string;
-  playbillImage?: { asset: { _ref: string } };
+  playbillImage?: string;
   playbillUrl?: string;
+  playwright?: string;
+  reviewers?: { name: string }[];
   reviewBody?: unknown[];
 }
 
@@ -64,10 +67,13 @@ const reviewFields = `
   date,
   showName,
   theaterName,
+  productionCompany,
   youtubeUrl,
   facebookUrl,
   playbillImage,
-  playbillUrl
+  playbillUrl,
+  playwright,
+  "reviewers": reviewers[]->{ name }
 `;
 
 export async function getAllReviews(): Promise<Review[]> {

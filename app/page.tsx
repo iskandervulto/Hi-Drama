@@ -19,7 +19,7 @@ export default async function HomePage() {
           <div className="flex items-center justify-center gap-3 mb-6">
             <div className="h-px w-16 bg-gold-600" />
             <p className="text-purple-200 font-lato text-lg tracking-widest uppercase text-sm">
-              Community Theater Reviews
+              Everything You Want to Know About Theater
             </p>
             <div className="h-px w-16 bg-gold-600" />
           </div>
@@ -151,7 +151,7 @@ export default async function HomePage() {
           {[
             { label: "YouTube", href: "https://www.youtube.com/@evaheinemann7651/videos", color: "bg-red-600 hover:bg-red-700" },
             { label: "Facebook", href: "https://www.facebook.com/hidramas", color: "bg-blue-700 hover:bg-blue-800" },
-            { label: "Twitter / X", href: "https://twitter.com/hidrama", color: "bg-gray-900 hover:bg-black" },
+            { label: "Twitter / X", href: "https://x.com/6_Second_Review", color: "bg-gray-900 hover:bg-black" },
           ].map(({ label, href, color }) => (
             <a
               key={label}

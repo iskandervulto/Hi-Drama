@@ -37,17 +37,29 @@ export const reviewSchema = defineType({
     }),
     defineField({
       name: "theaterName",
-      title: "Theater / Company Name",
+      title: "Theater / Venue",
+      type: "string",
+      description: 'The venue where the show is performed, e.g. "Hackensack Performing Arts Center"',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "productionCompany",
+      title: "Production Company",
       type: "string",
       description: 'e.g. "Valley Repertory Theatre"',
-      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "youtubeUrl",
       title: "YouTube Video URL",
       type: "url",
       description: "Full YouTube watch URL, e.g. https://youtube.com/watch?v=abc123",
-      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "reviewers",
+      title: "Reviewers",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "reviewer" }] }],
+      description: "Select one or more reviewers",
     }),
     defineField({
       name: "facebookUrl",
@@ -57,10 +69,15 @@ export const reviewSchema = defineType({
     }),
     defineField({
       name: "playbillImage",
-      title: "Playbill Cover",
-      type: "image",
-      description: "Upload a scan or photo of the show's playbill cover — used as the review card image",
-      options: { hotspot: true },
+      title: "Playbill Cover Image URL",
+      type: "url",
+      description: "Paste a link to the playbill cover image — used as the review card image",
+    }),
+    defineField({
+      name: "playwright",
+      title: "Playwright / Author",
+      type: "string",
+      description: 'e.g. "Stephen Sondheim" — the writer of the show being reviewed',
     }),
     defineField({
       name: "playbillUrl",
