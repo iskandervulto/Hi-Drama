@@ -17,6 +17,9 @@
 .env.test.local
 .env.production.local
 
+# skill packages
+*.skill
+
 # misc
 .DS_Store
 *.pem
