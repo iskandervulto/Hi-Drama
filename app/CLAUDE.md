@@ -22,7 +22,7 @@ Server component. Bio section (placeholder content), "how a review works" steps,
 Server component. Fetches all reviews, renders `SearchBar` for client-side filtering via `?q=` URL param, displays results as `ReviewCard` grid.
 
 ### `/reviews/[slug]` — Review Detail (`reviews/[slug]/page.tsx`)
-Server component. Fetches single review by slug. Shows YouTube embed, Facebook link, playbill image, and rich text review body via `@portabletext/react`.
+Server component. Fetches single review by slug. Shows YouTube embed, Facebook link, and rich text review body via `@portabletext/react`.
 
 ### `/show` — The Show (`show/page.tsx`)
 Server component with `revalidate = 3600` (ISR, 1 hour). Fetches all YouTube channel videos via `lib/youtube.ts`, passes them to `VideoGrid` client component for paginated display (18 at a time).

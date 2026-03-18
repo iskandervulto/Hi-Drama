@@ -2,7 +2,11 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getReviewBySlug, getAllReviews } from "@/lib/sanity";
 import YouTubeEmbed from "@/components/YouTubeEmbed";
-import { PortableText } from "@portabletext/react";
+import ReviewHeader from "@/components/reviews/ReviewHeader";
+import ShowDetails from "@/components/reviews/ShowDetails";
+import CastAndCrew from "@/components/reviews/CastAndCrew";
+import ReviewBody from "@/components/reviews/ReviewBody";
+import FacebookCTA from "@/components/reviews/FacebookCTA";
 import type { Metadata } from "next";
 
 interface ReviewPageProps {
@@ -21,18 +25,9 @@ export async function generateMetadata({
   const review = await getReviewBySlug(slug);
   if (!review) return { title: "Review Not Found" };
   return {
-    title: review.title,
+    title: review.showName,
     description: `Hi! Drama reviews ${review.showName} at ${review.theaterName}`,
   };
-}
-
-function formatDate(dateStr: string) {
-  return new Date(dateStr + "T00:00:00").toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
 }
 
 export default async function ReviewPage({ params }: ReviewPageProps) {
@@ -41,111 +36,48 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
   if (!review) notFound();
 
   return (
-    <article className="max-w-3xl mx-auto px-4 py-12">
+    <article className="max-w-5xl mx-auto px-4 py-12">
       {/* Breadcrumb */}
       <nav className="text-xs font-lato text-gray-400 mb-6 flex items-center gap-2">
         <Link href="/" className="hover:text-purple-700 transition-colors">
           Home
         </Link>
         <span>›</span>
-        <Link
-          href="/reviews"
-          className="hover:text-purple-700 transition-colors"
-        >
+        <Link href="/reviews" className="hover:text-purple-700 transition-colors">
           Reviews
         </Link>
         <span>›</span>
         <span className="text-gray-600 truncate">{review.showName}</span>
       </nav>
 
-      {/* Header */}
-      <header className="mb-8">
-        <p className="text-gold-600 font-lato text-xs tracking-widest uppercase mb-2">
-          {review.productionCompany ? `${review.productionCompany} — ${review.theaterName}` : review.theaterName}
-        </p>
-        <h1 className="font-playfair text-4xl sm:text-5xl font-bold text-purple-900 leading-tight mb-1">
-          {review.showName}
-        </h1>
-        {review.playwright && (
-          <p className="font-lato text-sm text-purple-500 italic mb-3">
-            by {review.playwright}
-          </p>
-        )}
-        <p className="text-gray-400 font-lato text-sm">
-          Reviewed{review.reviewers && review.reviewers.length > 0 ? ` by ${review.reviewers.map(r => r.name).join(" & ")}` : ""} on {formatDate(review.date)}
-        </p>
+      <ReviewHeader review={review} />
 
-        {/* Decorative rule */}
-        <div className="flex items-center gap-3 mt-5">
-          <div className="h-px flex-1 bg-purple-100" />
-          <div className="w-2 h-2 rotate-45 bg-gold-500" />
-          <div className="h-px flex-1 bg-purple-100" />
-        </div>
-      </header>
-
-      {/* Playbill image + Written review side by side */}
-      {(review.playbillImage || (review.reviewBody && Array.isArray(review.reviewBody) && review.reviewBody.length > 0)) && (
-        <section className="mb-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="h-px flex-1 bg-purple-100" />
-            <p className="font-playfair text-purple-400 text-sm italic">
-              The Review
-            </p>
-            <div className="h-px flex-1 bg-purple-100" />
-          </div>
-          <div>
-            {review.playbillImage && (
-              <img
-                src={review.playbillImage}
-                alt={`${review.showName} playbill`}
-                className="float-left w-48 mr-6 mb-4 rounded-sm shadow-md"
-              />
-            )}
-            {review.reviewBody && Array.isArray(review.reviewBody) && review.reviewBody.length > 0 && (
-              <div className="review-body prose prose-lg max-w-none font-lato text-charcoal text-justify">
-                <PortableText value={review.reviewBody as Parameters<typeof PortableText>[0]["value"]} />
-              </div>
-            )}
-          </div>
-        </section>
-      )}
-
-      {/* Playbill + Facebook CTAs */}
-      {(review.playbillUrl || review.facebookUrl) && (
-        <div className="mb-8 flex flex-wrap justify-center gap-4">
-          {review.playbillUrl && (
-            <a
-              href={review.playbillUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary"
-            >
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="w-4 h-4">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              View Playbill
-            </a>
+      {/* Two-column: show info left, cast & crew right */}
+      <div className="grid lg:grid-cols-3 gap-6 mb-8">
+        <div className="lg:col-span-1 flex flex-col gap-4">
+          {review.productionImage && (
+            <img
+              src={review.productionImage}
+              alt={`${review.showName} production photo`}
+              className="w-full rounded-sm shadow-md"
+            />
           )}
-          {review.facebookUrl && (
-            <a
-              href={review.facebookUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-gold"
-            >
-              <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-              </svg>
-              See the Facebook Post
-            </a>
-          )}
+          <ShowDetails review={review} />
         </div>
-      )}
+        <div className="lg:col-span-2">
+          <CastAndCrew review={review} />
+        </div>
+      </div>
+
+      {/* Written review — full width */}
+      <ReviewBody review={review} />
+
+      {review.facebookUrl && <FacebookCTA url={review.facebookUrl} />}
 
       {/* YouTube embed */}
       {review.youtubeUrl && (
         <section className="mb-8">
-          <YouTubeEmbed url={review.youtubeUrl} title={review.title} />
+          <YouTubeEmbed url={review.youtubeUrl} title={review.showName} />
         </section>
       )}
 

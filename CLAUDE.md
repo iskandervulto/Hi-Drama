@@ -1,6 +1,6 @@
 # Hi! Drama — Project Context
 
-Community theater critic website for **Hi! Drama**. The critic attends local community theater shows, records video reviews for public access TV and YouTube, and posts on Facebook and Twitter. This site is the central hub that ties it all together. Built by a separate developer for the show's creator.
+Theater critic website for **Hi! Drama**. The critic attends local theater shows, records video reviews for public access TV and YouTube, and posts on Facebook and Twitter. This site is the central hub that ties it all together. Built by a separate developer for the show's creator.
 
 ## Tech Stack
 - **Next.js 15** (App Router) + **React 19** + **TypeScript**

@@ -19,11 +19,11 @@ const lato = Lato({
 
 export const metadata: Metadata = {
   title: {
-    default: "Hi! Drama — Community Theater Reviews",
+    default: "Hi! Drama — Theater Reviews",
     template: "%s | Hi! Drama",
   },
   description:
-    "Community theater reviews by Hi! Drama — watch the video review, read the critique, and discover your next night out at the theater.",
+    "Theater reviews by Hi! Drama — watch the video review, read the review, and discover your next night out at the theater.",
   openGraph: {
     siteName: "Hi! Drama",
     type: "website",

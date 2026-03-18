@@ -21,7 +21,6 @@ export function urlFor(source: SanityImageSource) {
 
 export interface Review {
   _id: string;
-  title: string;
   slug: { current: string };
   date: string;
   showName: string;
@@ -29,9 +28,10 @@ export interface Review {
   productionCompany?: string;
   youtubeUrl?: string;
   facebookUrl?: string;
-  playbillImage?: string;
-  playbillUrl?: string;
+  productionImage?: string;
   playwright?: string;
+  showDetails?: unknown[];
+  castAndCrew?: unknown[];
   reviewers?: { name: string }[];
   reviewBody?: unknown[];
 }
@@ -62,7 +62,6 @@ export function getYouTubeThumbnail(url: string): string {
 
 const reviewFields = `
   _id,
-  title,
   slug,
   date,
   showName,
@@ -70,8 +69,7 @@ const reviewFields = `
   productionCompany,
   youtubeUrl,
   facebookUrl,
-  playbillImage,
-  playbillUrl,
+  productionImage,
   playwright,
   "reviewers": reviewers[]->{ name }
 `;
@@ -86,8 +84,8 @@ export async function getAllReviews(): Promise<Review[]> {
 export async function getRecentReviews(count = 4): Promise<Review[]> {
   if (!client) return SAMPLE_REVIEWS.slice(0, count);
   return client.fetch<Review[]>(
-    `*[_type == "review"] | order(date desc) [0...$count] { ${reviewFields} }`,
-    { count: count - 1 } as Record<string, unknown>
+    `*[_type == "review"] | order(date desc) [0...$limit] { ${reviewFields} }`,
+    { limit: count } as Record<string, unknown>
   );
 }
 
@@ -98,6 +96,8 @@ export async function getReviewBySlug(slug: string): Promise<Review | null> {
   const result = await client.fetch<Review | null>(
     `*[_type == "review" && slug.current == $slug][0] {
       ${reviewFields},
+      showDetails,
+      castAndCrew,
       reviewBody
     }`,
     { slug } as Record<string, string>
@@ -105,22 +105,33 @@ export async function getReviewBySlug(slug: string): Promise<Review | null> {
   return result || null;
 }
 
-export async function searchReviews(query: string): Promise<Review[]> {
+export type SearchField = "all" | "showName" | "theaterName" | "reviewer";
+export type SortOption = "newest" | "oldest" | "a-z" | "z-a";
+
+export async function searchReviews(query: string, field: SearchField = "all"): Promise<Review[]> {
   if (!client) {
     const q = query.toLowerCase();
-    return SAMPLE_REVIEWS.filter(
-      (r) =>
-        r.title.toLowerCase().includes(q) ||
+    return SAMPLE_REVIEWS.filter((r) => {
+      if (field === "showName") return r.showName.toLowerCase().includes(q);
+      if (field === "theaterName") return r.theaterName.toLowerCase().includes(q);
+      if (field === "reviewer") return r.reviewers?.some((rev) => rev.name.toLowerCase().includes(q)) ?? false;
+      return (
         r.showName.toLowerCase().includes(q) ||
-        r.theaterName.toLowerCase().includes(q)
-    );
+        r.theaterName.toLowerCase().includes(q) ||
+        (r.reviewers?.some((rev) => rev.name.toLowerCase().includes(q)) ?? false)
+      );
+    });
   }
-  const groqQuery = `*[_type == "review" && (
-      title match $query ||
-      showName match $query ||
-      theaterName match $query
-    )] | order(date desc) { ${reviewFields} }`;
-  return client.fetch<Review[]>(groqQuery, { query: `*${query}*` } as Record<string, string>);
+
+  const fieldConditions: Record<SearchField, string> = {
+    all: `showName match $query || theaterName match $query || count((reviewers[]->name)[@ match $query]) > 0`,
+    showName: `showName match $query`,
+    theaterName: `theaterName match $query`,
+    reviewer: `count((reviewers[]->name)[@ match $query]) > 0`,
+  };
+
+  const groqQuery = `*[_type == "review" && (${fieldConditions[field]})] | order(date desc) { ${reviewFields} }`;
+  return client.fetch<Review[]>(groqQuery, { query: `${query}*` } as Record<string, string>);
 }
 
 // ─── Sample data (shown when Sanity isn't configured yet) ─────────────────────
@@ -128,7 +139,6 @@ export async function searchReviews(query: string): Promise<Review[]> {
 export const SAMPLE_REVIEWS: Review[] = [
   {
     _id: "1",
-    title: "Into the Woods — Valley Repertory Theatre",
     slug: { current: "into-the-woods-valley-rep" },
     date: "2024-11-15",
     showName: "Into the Woods",
@@ -138,7 +148,6 @@ export const SAMPLE_REVIEWS: Review[] = [
   },
   {
     _id: "2",
-    title: "A Midsummer Night's Dream — Riverside Players",
     slug: { current: "midsummer-riverside-players" },
     date: "2024-10-02",
     showName: "A Midsummer Night's Dream",
@@ -148,7 +157,6 @@ export const SAMPLE_REVIEWS: Review[] = [
   },
   {
     _id: "3",
-    title: "Chicago — Lakeside Musical Theatre",
     slug: { current: "chicago-lakeside-musical" },
     date: "2024-09-20",
     showName: "Chicago",
@@ -158,7 +166,6 @@ export const SAMPLE_REVIEWS: Review[] = [
   },
   {
     _id: "4",
-    title: "The Phantom of the Opera — Community Arts Center",
     slug: { current: "phantom-community-arts" },
     date: "2024-08-10",
     showName: "The Phantom of the Opera",

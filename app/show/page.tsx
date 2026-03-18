@@ -6,7 +6,7 @@ export const revalidate = 3600; // ISR — refresh channel videos every hour
 export const metadata = {
   title: "The Show | Hi! Drama",
   description:
-    "Watch every episode of Hi! Drama — your community theater review show airing on public access TV and YouTube.",
+    "Watch every episode of Hi! Drama — your theater review show airing on public access TV and YouTube.",
 };
 
 export default async function ShowPage() {
@@ -25,7 +25,7 @@ export default async function ShowPage() {
           live on{" "}
           <span className="text-white font-semibold">Spectrum Ch.&nbsp;56</span>,{" "}
           <span className="text-white font-semibold">RCN Ch.&nbsp;83</span>, or{" "}
-          <span className="text-white font-semibold">Fios Ch.&nbsp;3</span>.
+          <span className="text-white font-semibold">Fios Ch.&nbsp;34</span>.
           Missed an episode? Every show lives on our YouTube channel below.
         </p>
       </section>

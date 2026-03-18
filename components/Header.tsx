@@ -66,7 +66,7 @@ export default function Header() {
           </span>
           <span className="hidden sm:block h-4 w-px bg-amber-600"></span>
           <span className="font-lato text-purple-900 text-xs sm:text-sm font-semibold tracking-wide">
-            <strong>Spectrum</strong> Ch.&nbsp;56&nbsp;&nbsp;·&nbsp;&nbsp;<strong>RCN</strong> Ch.&nbsp;83&nbsp;&nbsp;·&nbsp;&nbsp;<strong>Fios</strong> Ch.&nbsp;3
+            <strong>Spectrum</strong> Ch.&nbsp;56&nbsp;&nbsp;·&nbsp;&nbsp;<strong>RCN</strong> Ch.&nbsp;83&nbsp;&nbsp;·&nbsp;&nbsp;<strong>Fios</strong> Ch.&nbsp;34
           </span>
         </div>
       </div>

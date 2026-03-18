@@ -19,8 +19,6 @@ The `review` document schema. Fields:
 | `theaterName` | string | Yes | e.g. "Valley Repertory Theatre" |
 | `youtubeUrl` | url | Yes | Full YouTube watch URL |
 | `facebookUrl` | url | No | Link to Facebook post for this review |
-| `playbillImage` | image | No | Scan/photo of the show's playbill (hotspot enabled) |
-| `playbillUrl` | url | No | Link to full playbill |
 | `reviewBody` | portable text | No | Rich text review (supports H2, H3, blockquote, bold, italic) |
 
 Preview shows title + "theaterName · date" as subtitle. Default ordering is date descending.

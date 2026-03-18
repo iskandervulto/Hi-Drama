@@ -1,49 +1,30 @@
 import { Suspense } from "react";
-import { getAllReviews, searchReviews } from "@/lib/sanity";
-import ReviewCard from "@/components/ReviewCard";
+import type { SearchField, SortOption } from "@/lib/sanity";
 import SearchBar from "@/components/SearchBar";
+import SortSelect from "@/components/reviews/SortSelect";
+import ReviewsList from "@/components/reviews/ReviewsList";
 
 export const metadata = {
   title: "Reviews",
-  description: "Browse and search all Hi! Drama community theater reviews.",
+  description: "Browse and search all Hi! Drama theater reviews.",
 };
 
 interface ReviewsPageProps {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; field?: string; sort?: string }>;
 }
 
-async function ReviewsList({ query }: { query: string }) {
-  const reviews = query
-    ? await searchReviews(query)
-    : await getAllReviews();
-
-  if (reviews.length === 0) {
-    return (
-      <div className="col-span-full text-center py-20 text-gray-400 font-lato">
-        <p className="text-5xl mb-4">🎭</p>
-        <p className="text-lg">No reviews found for &ldquo;{query}&rdquo;</p>
-        <p className="text-sm mt-2">Try a different search term.</p>
-      </div>
-    );
-  }
-
-  return (
-    <>
-      {query && (
-        <p className="col-span-full text-sm text-gray-500 font-lato mb-2">
-          {reviews.length} result{reviews.length !== 1 ? "s" : ""} for &ldquo;{query}&rdquo;
-        </p>
-      )}
-      {reviews.map((review) => (
-        <ReviewCard key={review._id} review={review} />
-      ))}
-    </>
-  );
-}
+const VALID_FIELDS: SearchField[] = ["all", "showName", "theaterName", "reviewer"];
+const VALID_SORTS: SortOption[] = ["newest", "oldest", "a-z", "z-a"];
 
 export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
   const resolvedParams = await searchParams;
   const query = resolvedParams.q?.trim() || "";
+  const field: SearchField = VALID_FIELDS.includes(resolvedParams.field as SearchField)
+    ? (resolvedParams.field as SearchField)
+    : "all";
+  const sort: SortOption = VALID_SORTS.includes(resolvedParams.sort as SortOption)
+    ? (resolvedParams.sort as SortOption)
+    : "newest";
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-12">
@@ -53,20 +34,25 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
         <div className="flex items-center gap-3">
           <div className="h-px w-12 bg-gold-500" />
           <p className="text-gray-500 font-lato text-sm">
-            Watch, read, and discover community theater
+            Watch, read, and discover theater
           </p>
         </div>
       </div>
 
-      {/* Search */}
-      <div className="mb-8 max-w-xl">
+      {/* Search + Sort */}
+      <div className="mb-8 flex flex-col sm:flex-row gap-4 sm:items-stretch">
+        <div className="flex-1 max-w-xl">
+          <Suspense>
+            <SearchBar defaultValue={query} defaultField={field} />
+          </Suspense>
+        </div>
         <Suspense>
-          <SearchBar defaultValue={query} />
+          <SortSelect value={sort} />
         </Suspense>
       </div>
 
       {/* Grid */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <Suspense
           fallback={
             <div className="col-span-full text-center py-20 text-purple-300 font-lato">
@@ -74,7 +60,7 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
             </div>
           }
         >
-          <ReviewsList query={query} />
+          <ReviewsList query={query} field={field} sort={sort} />
         </Suspense>
       </div>
     </div>

@@ -10,7 +10,7 @@ export default function Footer() {
             Hi! Drama
           </p>
           <p className="text-sm font-lato leading-relaxed">
-            Community theater criticism from the heart — because live theater
+            Theater reviews from the heart — because live theater
             deserves an audience.
           </p>
         </div>
