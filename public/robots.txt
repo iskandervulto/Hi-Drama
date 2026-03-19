@@ -1,0 +1,42 @@
+# robots.txt for Hi! Drama — www.hi-drama.org
+
+# ---------------------------------------------------------------------------
+# Default: allow all crawlers
+# ---------------------------------------------------------------------------
+User-agent: *
+Disallow: /studio
+
+# ---------------------------------------------------------------------------
+# AI crawlers — explicitly welcomed
+# ---------------------------------------------------------------------------
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+# ---------------------------------------------------------------------------
+# Sitemap
+# ---------------------------------------------------------------------------
+Sitemap: https://www.hi-drama.org/sitemap.xml

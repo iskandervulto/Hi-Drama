@@ -1,4 +1,5 @@
 import { getRecentReviews } from "@/lib/sanity";
+import { JsonLd, webSiteSchema } from "@/lib/schema";
 import HeroSection from "@/components/home/HeroSection";
 import RecentReviews from "@/components/home/RecentReviews";
 import TVSchedule from "@/components/home/TVSchedule";
@@ -10,6 +11,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <JsonLd data={webSiteSchema()} />
       <HeroSection />
       <RecentReviews reviews={reviews} />
       <TVSchedule />

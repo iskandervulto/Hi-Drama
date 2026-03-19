@@ -3,6 +3,7 @@ import { Playfair_Display, Lato } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { JsonLd, organizationSchema } from "@/lib/schema";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -18,6 +19,9 @@ const lato = Lato({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://hi-drama.org"
+  ),
   title: {
     default: "Hi! Drama — Theater Reviews",
     template: "%s | Hi! Drama",
@@ -27,6 +31,18 @@ export const metadata: Metadata = {
   openGraph: {
     siteName: "Hi! Drama",
     type: "website",
+    images: [
+      {
+        url: "/theater-masks.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Hi! Drama — Theater Reviews",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/theater-masks.jpg"],
   },
 };
 
@@ -38,6 +54,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${lato.variable}`}>
       <body className="min-h-screen flex flex-col">
+        <JsonLd data={organizationSchema()} />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

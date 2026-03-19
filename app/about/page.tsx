@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import BioSection from "@/components/about/BioSection";
 import SocialLinks from "@/components/about/SocialLinks";
+import { JsonLd, breadcrumbSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "About",
@@ -11,7 +12,12 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
+    <>
+      <JsonLd data={breadcrumbSchema([
+        { name: "Home", url: "https://www.hi-drama.org" },
+        { name: "About", url: "https://www.hi-drama.org/about" },
+      ])} />
+      <div className="max-w-4xl mx-auto px-4 py-12">
       {/* Header */}
       <div className="mb-10">
         <h1 className="page-title">About Hi! Drama</h1>
@@ -33,5 +39,6 @@ export default function AboutPage() {
         </Link>
       </div>
     </div>
+    </>
   );
 }

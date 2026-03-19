@@ -3,6 +3,7 @@ import type { SearchField, SortOption } from "@/lib/sanity";
 import SearchBar from "@/components/SearchBar";
 import SortSelect from "@/components/reviews/SortSelect";
 import ReviewsList from "@/components/reviews/ReviewsList";
+import { JsonLd, breadcrumbSchema } from "@/lib/schema";
 
 export const metadata = {
   title: "Reviews",
@@ -27,7 +28,12 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
     : "newest";
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12">
+    <>
+      <JsonLd data={breadcrumbSchema([
+        { name: "Home", url: "https://www.hi-drama.org" },
+        { name: "Reviews", url: "https://www.hi-drama.org/reviews" },
+      ])} />
+      <div className="max-w-6xl mx-auto px-4 py-12">
       {/* Page header */}
       <div className="mb-8">
         <h1 className="page-title">All Reviews</h1>
@@ -64,5 +70,6 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
         </Suspense>
       </div>
     </div>
+    </>
   );
 }

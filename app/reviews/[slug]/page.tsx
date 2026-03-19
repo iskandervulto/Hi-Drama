@@ -8,6 +8,7 @@ import CastAndCrew from "@/components/reviews/CastAndCrew";
 import ReviewBody from "@/components/reviews/ReviewBody";
 import FacebookCTA from "@/components/reviews/FacebookCTA";
 import type { Metadata } from "next";
+import { JsonLd, breadcrumbSchema, reviewSchema } from "@/lib/schema";
 
 interface ReviewPageProps {
   params: Promise<{ slug: string }>;
@@ -37,6 +38,12 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
 
   return (
     <article className="max-w-5xl mx-auto px-4 py-12">
+      <JsonLd data={breadcrumbSchema([
+        { name: "Home", url: "https://www.hi-drama.org" },
+        { name: "Reviews", url: "https://www.hi-drama.org/reviews" },
+        { name: review.showName, url: `https://www.hi-drama.org/reviews/${slug}` },
+      ])} />
+      <JsonLd data={reviewSchema(review)} />
       {/* Breadcrumb */}
       <nav className="text-xs font-lato text-gray-400 mb-6 flex items-center gap-2">
         <Link href="/" className="hover:text-purple-700 transition-colors">
