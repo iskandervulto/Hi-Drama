@@ -29,6 +29,7 @@ export default function ReviewCard({ review }: ReviewCardProps) {
     >
       {/* Thumbnail — production photo preferred, YouTube fallback */}
       <div className={`relative overflow-hidden bg-purple-100 ${hasProductionImage ? "aspect-[2/3]" : "aspect-video"}`}>
+        {thumbnail ? (
         <Image
           src={thumbnail}
           alt={review.showName}
@@ -37,6 +38,11 @@ export default function ReviewCard({ review }: ReviewCardProps) {
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           unoptimized
         />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center text-purple-300 font-playfair text-lg">
+            No image
+          </div>
+        )}
         {/* Play overlay — only shown when falling back to YouTube thumbnail */}
         {!hasProductionImage && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
