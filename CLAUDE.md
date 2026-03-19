@@ -12,15 +12,15 @@ Theater critic website for **Hi! Drama**. The critic attends local theater shows
 
 ## Running Locally
 ```bash
-PORT=4000 npm run dev
-# → http://localhost:4000
-# → http://localhost:4000/studio  (Sanity editor — requires env vars)
+PORT=3333 npm run dev
+# → http://localhost:3333
+# → http://localhost:3333/studio  (Sanity editor — requires env vars)
 ```
 
 ## Commands
 | Command | Purpose |
 |---|---|
-| `npm run dev` | Start dev server (default port 3000, use `PORT=4000` to override) |
+| `npm run dev` | Start dev server — **always use `PORT=3333`** |
 | `npm run build` | Production build |
 | `npm run start` | Serve production build |
 | `npm run lint` | Run ESLint |

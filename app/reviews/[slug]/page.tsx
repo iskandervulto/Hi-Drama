@@ -52,9 +52,9 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
 
       <ReviewHeader review={review} />
 
-      {/* Two-column: show info left, cast & crew right */}
-      <div className="grid lg:grid-cols-3 gap-6 mb-8">
-        <div className="lg:col-span-1 flex flex-col gap-4">
+      {/* Two-column: photo + cast + show details left, review right */}
+      <div className="grid sm:grid-cols-[280px_1fr] lg:grid-cols-[300px_1fr] gap-6 mb-8">
+        <div className="flex flex-col gap-4">
           {review.productionImage && (
             <img
               src={review.productionImage}
@@ -62,15 +62,13 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
               className="w-full rounded-sm shadow-md"
             />
           )}
+          <CastAndCrew review={review} />
           <ShowDetails review={review} />
         </div>
-        <div className="lg:col-span-2">
-          <CastAndCrew review={review} />
+        <div>
+          <ReviewBody review={review} />
         </div>
       </div>
-
-      {/* Written review — full width */}
-      <ReviewBody review={review} />
 
       {review.facebookUrl && <FacebookCTA url={review.facebookUrl} />}
 
