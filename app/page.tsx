@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getRecentReviews } from "@/lib/sanity";
 import { JsonLd, webSiteSchema } from "@/lib/schema";
 import HeroSection from "@/components/home/HeroSection";
