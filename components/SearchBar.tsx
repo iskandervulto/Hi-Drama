@@ -8,6 +8,7 @@ const FILTER_OPTIONS: { value: SearchField; label: string }[] = [
   { value: "all", label: "All fields" },
   { value: "showName", label: "Show name" },
   { value: "theaterName", label: "Venue" },
+  { value: "productionCompany", label: "Production company" },
   { value: "reviewer", label: "Reviewer" },
 ];
 

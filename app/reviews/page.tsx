@@ -14,7 +14,7 @@ interface ReviewsPageProps {
   searchParams: Promise<{ q?: string; field?: string; sort?: string }>;
 }
 
-const VALID_FIELDS: SearchField[] = ["all", "showName", "theaterName", "reviewer"];
+const VALID_FIELDS: SearchField[] = ["all", "showName", "theaterName", "productionCompany", "reviewer"];
 const VALID_SORTS: SortOption[] = ["newest", "oldest", "a-z", "z-a"];
 
 export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {

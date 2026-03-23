@@ -105,7 +105,7 @@ export async function getReviewBySlug(slug: string): Promise<Review | null> {
   return result || null;
 }
 
-export type SearchField = "all" | "showName" | "theaterName" | "reviewer";
+export type SearchField = "all" | "showName" | "theaterName" | "productionCompany" | "reviewer";
 export type SortOption = "newest" | "oldest" | "a-z" | "z-a";
 
 export async function searchReviews(query: string, field: SearchField = "all"): Promise<Review[]> {
@@ -114,19 +114,22 @@ export async function searchReviews(query: string, field: SearchField = "all"): 
     return SAMPLE_REVIEWS.filter((r) => {
       if (field === "showName") return r.showName.toLowerCase().includes(q);
       if (field === "theaterName") return r.theaterName.toLowerCase().includes(q);
+      if (field === "productionCompany") return r.productionCompany?.toLowerCase().includes(q) ?? false;
       if (field === "reviewer") return r.reviewers?.some((rev) => rev.name.toLowerCase().includes(q)) ?? false;
       return (
         r.showName.toLowerCase().includes(q) ||
         r.theaterName.toLowerCase().includes(q) ||
+        (r.productionCompany?.toLowerCase().includes(q) ?? false) ||
         (r.reviewers?.some((rev) => rev.name.toLowerCase().includes(q)) ?? false)
       );
     });
   }
 
   const fieldConditions: Record<SearchField, string> = {
-    all: `showName match $query || theaterName match $query || count((reviewers[]->name)[@ match $query]) > 0`,
+    all: `showName match $query || theaterName match $query || productionCompany match $query || count((reviewers[]->name)[@ match $query]) > 0`,
     showName: `showName match $query`,
     theaterName: `theaterName match $query`,
+    productionCompany: `productionCompany match $query`,
     reviewer: `count((reviewers[]->name)[@ match $query]) > 0`,
   };
 
